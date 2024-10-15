@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_bvp, solve_ivp
 from scipy.linalg import solve
-
+from math import e
 #Parámetros del problema
 
 #x
@@ -17,6 +17,12 @@ def solucion_exacta(x):
     return 1 / 6 * (x**3 * e**x) - 5 / 3 * (x * e**x) + 2 * e**x - x - 2
 
 def solucion_bvp(x):
+    def bc(Ya, Yb):
+        return np.array([Ya[0], Yb[0]])
+    xg= np.linspace(0,100)
+    inicialg=np.zeros((2,xg.size))
+    def funcion(x,y):
+        return np
     return 
 
 # Método de diferencias finitas
