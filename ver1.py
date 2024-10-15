@@ -53,12 +53,19 @@ def diferencias_finitas(n_puntos):
     
     for i in range(n_puntos):
         xi = (i + 1) * dx
-        A[i, i] = -2 / dx**2
-        if i > 0:
-            A[i, i-1] = 1 / dx**2
-        if i < n_puntos - 1:
-            A[i, i+1] = 1 / dx**2
-        b[i] = xi*np.exp(xi) - xi
+        if i == 0:
+            A[i, i] = 1
+            A[i, i+1] = -1
+            b[i] = 0
+        elif i == n_puntos - 1:
+            A[i, i-1] = 1
+            A[i, i] = -1
+            b[i] = -4
+        else:
+            A[i, i-1] = 1 / dx**2 - 1 / 2 / dx
+            A[i, i] = -2 / dx**2 - 1
+            A[i, i+1] = 1 / dx**2 + 1 / 2 / dx
+            b[i] = xi*np.exp(xi) - xi
     
     y[1:-1] = np.linalg.solve(A, b)
     
@@ -74,9 +81,13 @@ result = solve_bvp(ecuacion, condicion_frontera, np.linspace(0, 2, 100), np.zero
 x_bvp = result.x
 y_bvp = result.y
 
-
 plt.scatter(x_exacta, y_exacta, label='Solución exacta',  color='red')
 plt.plot(x_bvp, y_bvp[0], label='Solución BVP')
 plt.plot(x_finitas, y_finitas, label='Solución diferencias finitas')
 plt.legend()
 plt.show()
+
+#Grafico error Local
+
+
+#Grafico error global
