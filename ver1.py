@@ -19,7 +19,7 @@ Con condiciones de
 Y en el ejercicio se da la solución exacta:
 
 $$
-y(x) = \frac{1}{6}(x^3e^x) - \frac{5}{3}(xe^x) + 2e^x - x -2
+y(x) = frac{1}{6}(x^3e^x) - frac{5}{3}(xe^x) + 2e^x - x -2
 $$
 '''
 
@@ -30,10 +30,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_bvp
 
-def ecuacion(y, x):
-    y_p = y[1]
-    y_pp = 2*y_p - y[0] + x*np.exp(x) - x
-    return np.array([y_p, y_pp])
+def ecuacion(x, y):
+    return np.array([y[1], 2*y[1] - y[0] + x*np.exp(x) - x])
 
 def condicion_frontera(ya, yb):
     return np.array([ya[0], yb[0] - (-4)])
@@ -70,11 +68,14 @@ def diferencias_finitas(n_puntos):
 x_exacta = np.linspace(0, 2, 100)
 y_exacta = solucion_exacta(x_exacta)
 
-x_bvp, y_bvp = solve_bvp(ecuacion, condicion_frontera, np.linspace(0, 2, 100), np.zeros((2, 100)))
-
 x_finitas, y_finitas = diferencias_finitas(50)
 
-plt.plot(x_exacta, y_exacta, label='Solución exacta')
+result = solve_bvp(ecuacion, condicion_frontera, np.linspace(0, 2, 100), np.zeros((2, 100)))
+x_bvp = result.x
+y_bvp = result.y
+
+
+plt.scatter(x_exacta, y_exacta, label='Solución exacta',  color='red')
 plt.plot(x_bvp, y_bvp[0], label='Solución BVP')
 plt.plot(x_finitas, y_finitas, label='Solución diferencias finitas')
 plt.legend()
