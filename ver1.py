@@ -1,56 +1,81 @@
 # Ejercicio 2 Parcial 4 Métodos Númericos
 
+'''
+## Tema B
+
+Se plantea la ecuación:
+
+$$
+y'' = 2y' - y + xe^x - x
+$$
+
+Con condiciones de 
+
+- y(0) = 0
+- y(2) = - 4
+- 0 $\le$ x $\le$ 2
+
+
+Y en el ejercicio se da la solución exacta:
+
+$$
+y(x) = \frac{1}{6}(x^3e^x) - \frac{5}{3}(xe^x) + 2e^x - x -2
+$$
+'''
+
+
+
 #librerias
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.integrate import solve_bvp, solve_ivp
-from scipy.linalg import solve
+from scipy.integrate import solve_bvp
 
-#Parámetros del problema
+def ecuacion(y, x):
+    y_p = y[1]
+    y_pp = 2*y_p - y[0] + x*np.exp(x) - x
+    return np.array([y_p, y_pp])
 
-#x
-
-
+def condicion_frontera(ya, yb):
+    return np.array([ya[0], yb[0] - (-4)])
 
 #solución exacta
 def solucion_exacta(x):
-    return 1 / 6 * (x**3 * e**x) - 5 / 3 * (x * e**x) + 2 * e**x - x - 2
+    return (1/6)*x**3*np.exp(x) - (5/3)*x*np.exp(x) + 2*np.exp(x) - x - 2
 
-def solucion_bvp(x):
-    return 
-
-# Método de diferencias finitas
 def diferencias_finitas(n_puntos):
-    # Calcular el paso de discretización (dx)
+    L = 2.0
     dx = L / (n_puntos + 1)
-    
-    # Crear un arreglo de puntos x con n_puntos + 2 elementos (incluyendo los extremos)
     x = np.linspace(0, L, n_puntos + 2)
+    y = np.zeros(n_puntos + 2)
+    y[0] = 0
+    y[-1] = -4
     
-    # Crear una matriz A y un vector b para el sistema de ecuaciones lineales
     A = np.zeros((n_puntos, n_puntos))
     b = np.zeros(n_puntos)
     
-    # Rellenar la matriz A y el vector b
     for i in range(n_puntos):
-        xi = (i + 1) * dx  # Calcular el valor de x en el punto i
-        A[i, i] = -2 / dx**2  # Elemento diagonal de la matriz A
+        xi = (i + 1) * dx
+        A[i, i] = -2 / dx**2
         if i > 0:
-            A[i, i-1] = 1 / dx**2  # Elemento subdiagonal de la matriz A
+            A[i, i-1] = 1 / dx**2
         if i < n_puntos - 1:
-            A[i, i+1] = 1 / dx**2  # Elemento superdiagonal de la matriz A
-        b[i] = (w * L * xi / (2 * E * I)) - (w * xi**2 / (2 * E * I))  # Elemento del vector b
+            A[i, i+1] = 1 / dx**2
+        b[i] = xi*np.exp(xi) - xi
     
-    # Resolver el sistema de ecuaciones lineales
-    y_finitas = solve(A, b)
+    y[1:-1] = np.linalg.solve(A, b)
     
-    # Agregar los valores de las condiciones de frontera (y(0) = y(L) = 0)
-    y_finitas = np.concatenate(([0], y_finitas, [0]))
-    
-    return x, y_finitas  # Devolver la solución encontrada
+    return x, y
 
 # Graficar los resultados
-x_exacta = np.linspace(0, L, 100)
+x_exacta = np.linspace(0, 2, 100)
 y_exacta = solucion_exacta(x_exacta)
-x_finitas, y_finitas = diferencias_finitas(50) #aquí el 50, es el valor de los puntos o nodos
 
+x_bvp, y_bvp = solve_bvp(ecuacion, condicion_frontera, np.linspace(0, 2, 100), np.zeros((2, 100)))
+
+x_finitas, y_finitas = diferencias_finitas(50)
+
+plt.plot(x_exacta, y_exacta, label='Solución exacta')
+plt.plot(x_bvp, y_bvp[0], label='Solución BVP')
+plt.plot(x_finitas, y_finitas, label='Solución diferencias finitas')
+plt.legend()
+plt.show()
