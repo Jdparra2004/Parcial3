@@ -61,7 +61,7 @@ def diferencias_finitas(n_puntos):
             A[i-1, i] = -1  # Coeficiente de y[i+1]
         
         # Construcción del vector b
-        b[i-1] = h**2 * xi * np.exp(xi) - h**2 * xi  # Término independiente
+        b[i-1] = h**2 * (xi * np.exp(xi) - xi)  # Término independiente
 
     # Resolver el sistema de ecuaciones
     y[1:-1] = np.linalg.solve(A, b)
