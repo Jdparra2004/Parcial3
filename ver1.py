@@ -8,7 +8,7 @@ from scipy.linalg import solve
 
 #Parámetros del problema
 
-#
+#x
 
 
 
