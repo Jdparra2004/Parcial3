@@ -22,7 +22,9 @@ def solucion_bvp(x):
     xg= np.linspace(0,100)
     inicialg=np.zeros((2,xg.size))
     def funcion(x,y):
+        
         return np
+    solbb= solve_bvp(funcion, bc, xg, inicialg)
     return 
 
 # Método de diferencias finitas
