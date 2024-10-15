@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-=======
+
 # Ejercicio 2 Parcial 4 Métodos Númericos
 
 #librerias
@@ -64,4 +63,3 @@ x_exacta = np.linspace(0, L, 100)
 y_exacta = solucion_exacta(x_exacta)
 x_finitas, y_finitas = diferencias_finitas(50) #aquí el 50, es el valor de los puntos o nodos
 
->>>>>>> 6f9ef28206a4fcfb1b6c619c2e6ebb141983960b
